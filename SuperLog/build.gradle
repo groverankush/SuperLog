@@ -24,6 +24,32 @@ ext {
     allLicenses = ["GPL-3.0"]
 }
 
+/*ext {
+    bintrayRepo = 'WebViewOverlay'
+    bintrayName = 'WebViewOverlay'
+
+    publishedGroupId = 'org.ptyagicodecamp'
+    libraryName = 'WebViewOverlay'
+    artifact = 'WebViewOverlay'
+
+    libraryDescription = 'A widget to load WebView as an Overlay.'
+
+    siteUrl = 'https://github.com/ptyagicodecamp/webview-overlay'
+    gitUrl = 'https://github.com/ptyagicodecamp/webview-overlay.git'
+
+    libraryVersion = '1.0.2'
+
+    developerId = 'ptyagicodecamp'
+    developerName = 'Priyanka Tyagi'
+    developerEmail = 'ptyagicodecamp@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}*/
+
+
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
