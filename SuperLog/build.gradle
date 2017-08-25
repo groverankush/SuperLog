@@ -11,7 +11,7 @@ ext {
     libraryDescription = 'Super Log is a logging mechanism for Android Apps. It provides the functionality of displaying logs in the app itself.'
 
     siteUrl = 'https://github.com/groverankush/SuperLog'
-    gitUrl = 'https://github.com/groverankush/SuperLog'
+    gitUrl = 'https://github.com/groverankush/SuperLog.git'
 
     libraryVersion = '1.0.0'
 
