@@ -7,8 +7,9 @@ package com.ankushgrover.superlog;
 public class SuperLog {
 
     private static final int DEBUG = 0;
-    private static final int ERROR = 0;
-    private static final int WARNING = 0;
+    private static final int ERROR = 1;
+    private static final int WARNING = 2;
+    private static final int NORMAL = 3;
 
     /**
      * Debug log
@@ -17,7 +18,7 @@ public class SuperLog {
      * @param msg
      */
     public static void d(String tag, String msg) {
-
+        log(DEBUG, tag, msg);
     }
 
 
@@ -28,7 +29,7 @@ public class SuperLog {
      * @param msg
      */
     public static void e(String tag, String msg) {
-
+        log(ERROR, tag, msg);
     }
 
     /**
@@ -38,7 +39,7 @@ public class SuperLog {
      * @param msg
      */
     public static void w(String tag, String msg) {
-
+        log(WARNING, tag, msg);
     }
 
 
@@ -48,6 +49,11 @@ public class SuperLog {
      * @param msg
      */
     public static void log(String msg) {
+        log(NORMAL, "", msg);
+    }
+
+
+    private static void log(int type, String tag, String msg) {
 
     }
 
