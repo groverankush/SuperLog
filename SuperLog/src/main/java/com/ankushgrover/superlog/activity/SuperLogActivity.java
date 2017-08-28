@@ -1,18 +1,15 @@
-package com.ankushgrover.android_super_log;
+package com.ankushgrover.superlog.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.ankushgrover.superlog.SuperLog;
+import com.ankushgrover.superlog.R;
 
-public class MainActivity extends AppCompatActivity {
+public class SuperLogActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
-
+        setContentView(R.layout.activity_super_log);
     }
 }
