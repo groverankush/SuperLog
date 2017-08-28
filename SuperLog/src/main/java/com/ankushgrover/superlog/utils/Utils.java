@@ -1,4 +1,4 @@
-package com.ankushgrover.superlog;
+package com.ankushgrover.superlog.utils;
 
 import android.text.TextUtils;
 
