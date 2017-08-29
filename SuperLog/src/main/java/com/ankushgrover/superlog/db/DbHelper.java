@@ -3,8 +3,8 @@ package com.ankushgrover.superlog.db;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.db.table.SuperLogTable;
-import com.ankushgrover.superlog.lib.SuperLogApp;
 
 /**
  * Created by Ankush Grover(ankush.dev2@gmail.com) on 28/8/17.
@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static DbHelper mInstance;
 
     private DbHelper() {
-        super(SuperLogApp.getInstance(), NAME, null, DB_VERSION);
+        super(SuperLog.getContext(), NAME, null, DB_VERSION);
     }
 
     public static synchronized DbHelper getInstance() {

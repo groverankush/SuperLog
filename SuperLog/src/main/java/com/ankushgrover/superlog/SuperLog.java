@@ -1,5 +1,7 @@
 package com.ankushgrover.superlog;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.ankushgrover.superlog.model.SuperLogModel;
 
 public class SuperLog implements SuperLogConstants {
 
+    private static Application CONTEXT;
 
     /**
      * Debug log
@@ -85,6 +88,15 @@ public class SuperLog implements SuperLogConstants {
             }
         });
 
+    }
+
+
+    public static void init(@NonNull Application context) {
+        CONTEXT = context;
+    }
+
+    public static Application getContext() {
+        return CONTEXT;
     }
 
 }

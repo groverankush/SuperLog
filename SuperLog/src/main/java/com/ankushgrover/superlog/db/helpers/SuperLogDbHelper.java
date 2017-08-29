@@ -5,12 +5,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.DbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.db.table.SuperLogTable;
-import com.ankushgrover.superlog.lib.SuperLogApp;
 import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.TimeUtils;
 
@@ -81,7 +82,10 @@ public class SuperLogDbHelper implements SuperLogConstants {
     private void sendBroadcast(String action, SuperLogModel log) {
         Intent intent = new Intent(action);
         intent.putExtra(LOG, log);
-        SuperLogApp.getInstance().sendBroadcast(intent);
+
+        LocalBroadcastManager.getInstance(SuperLog.getContext()).sendBroadcast(intent);
+
+        //SuperLog.getContext().sendBroadcast(intent);
     }
 
 

@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SuperLog.init(getApplication());
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {

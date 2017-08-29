@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -29,19 +33,25 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     private SuperLogAdapter adapter;
     private ProgressBar progressBar;
     private BroadcastReceiver receiver;
+    private boolean scroll = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_super_log);
 
-/*        try {
-            getSupportActionBar().hide();
-        } catch (NullPointerException e) {
-            SuperLog.log("ACTION BAR NULL");
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+        }else {
+            findViewById(R.id.toolbar).setVisibility(View.GONE);
         }
 
-        initializeToolbar("SuperLog");*/
+        setTitle("SuperLog");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
         SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS, null, this);
@@ -54,6 +64,27 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         recycler.setAdapter(adapter);
 
         recycler.scrollToPosition(logs.size() - 1);
+
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy < 0)
+                    scroll = false;
+
+                if (dy > 60)
+                    scroll = true;
+
+
+            }
+        });
 
 
         registerReceiver();
@@ -68,7 +99,8 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
                     case ACTION_LOG_INSERTED:
                         logs.add((SuperLogModel) intent.getParcelableExtra(LOG));
                         adapter.notifyDataSetChanged();
-                        //recycler.scrollToPosition(logs.size() - 1);
+                        if (scroll)
+                            recycler.smoothScrollToPosition(logs.size() - 1);
                         break;
                 }
             }
@@ -77,20 +109,23 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_LOG_INSERTED);
 
-        registerReceiver(receiver, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
+        //registerReceiver(receiver, filter);
 
     }
 
-    public Toolbar initializeToolbar(String title) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        toolbar.setTitle(title);
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
 
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        return toolbar;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -108,6 +143,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        //unregisterReceiver(receiver);
     }
 }
