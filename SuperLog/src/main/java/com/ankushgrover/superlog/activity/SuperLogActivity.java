@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.ankushgrover.superlog.R;
+import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.adapters.SuperLogAdapter;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
@@ -32,6 +34,14 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_super_log);
+
+/*        try {
+            getSupportActionBar().hide();
+        } catch (NullPointerException e) {
+            SuperLog.log("ACTION BAR NULL");
+        }
+
+        initializeToolbar("SuperLog");*/
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
         SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS, null, this);
@@ -69,6 +79,18 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
 
         registerReceiver(receiver, filter);
 
+    }
+
+    public Toolbar initializeToolbar(String title) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+
+
+        toolbar.setTitle(title);
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        return toolbar;
     }
 
     @Override
