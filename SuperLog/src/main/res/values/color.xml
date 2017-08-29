@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="debug">#2196F3</color>
+    <color name="warn">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="verbose">@android:color/darker_gray</color>
+    <color name="info">#4CAF50</color>
+
+</resources>

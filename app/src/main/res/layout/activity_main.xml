@@ -6,15 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.ankushgrover.android_super_log.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:backgroundTint="@color/colorPrimary" />
 
     <com.ankushgrover.superlog.views.SuperLogView
         android:layout_width="match_parent"

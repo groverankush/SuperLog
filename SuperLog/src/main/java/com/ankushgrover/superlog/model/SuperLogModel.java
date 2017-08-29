@@ -3,6 +3,8 @@ package com.ankushgrover.superlog.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.ankushgrover.superlog.SuperLog;
+
 /**
  * Created by Ankush Grover(ankush.dev2@gmail.com) on 28/8/17.
  */
@@ -14,6 +16,10 @@ public class SuperLogModel implements Parcelable {
     private String timestamp;
     private int type;
 
+
+    public SuperLogModel(){
+
+    }
 
     public SuperLogModel(String tag, String message, int type) {
         this.tag = tag;

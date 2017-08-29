@@ -5,5 +5,16 @@ package com.ankushgrover.superlog.constants;
  */
 
 public interface SuperLogConstants {
-    public static final String LOG = "log";
+
+
+    int DEBUG = 0;
+    int ERROR = 1;
+    int WARNING = 2;
+    int VERBOSE = 3;
+    int NORMAL = 4;
+
+
+    String ACTION_LOG_INSERTED = "actionLogInserted";
+
+    String LOG = "log";
 }

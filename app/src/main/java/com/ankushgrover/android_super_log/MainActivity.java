@@ -5,6 +5,9 @@ import android.os.Bundle;
 
 import com.ankushgrover.superlog.SuperLog;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -13,6 +16,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                SuperLog.d("Checkl", "message");
+            }
+        }, 0, 1000);
 
     }
 }
