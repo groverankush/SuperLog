@@ -7,9 +7,7 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
-        <activity
-            android:name=".activity.SuperLogActivity"
-             />
+        <activity android:name=".activity.SuperLogActivity" />
     </application>
 
 </manifest>

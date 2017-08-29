@@ -56,7 +56,7 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
         public Holder(View itemView) {
             super(itemView);
 
-            log = itemView.findViewById(R.id.log);
+            log = (TextView) itemView.findViewById(R.id.log);
 
         }
     }
