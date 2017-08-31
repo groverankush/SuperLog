@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                SuperLog.d("Checkl", "message");
+                SuperLog.i("Checkl", "message");
             }
-        }, 0, 1000);
+        }, 0, 5000);
 
     }
 }

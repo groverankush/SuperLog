@@ -1,15 +1,19 @@
 package com.ankushgrover.superlog;
 
 import android.app.Application;
-import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Html;
+import android.text.SpannableString;
 import android.util.Log;
 
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
+import com.ankushgrover.superlog.mail.GMailSender;
 import com.ankushgrover.superlog.model.SuperLogModel;
+import com.ankushgrover.superlog.utils.Utils;
 
 /**
  * Created by Ankush Grover(ankush.dev2@gmail.com) on 24/8/17.
@@ -64,6 +68,10 @@ public class SuperLog implements SuperLogConstants {
         log(VERBOSE, tag, msg);
     }
 
+    public static void i(@NonNull String tag, @NonNull String msg) {
+        Log.i(tag, msg);
+        log(INFO, tag, msg);
+    }
 
     /**
      * Log without tag.
@@ -90,6 +98,53 @@ public class SuperLog implements SuperLogConstants {
 
     }
 
+    /**
+     * Method to send mail to recipient's email id.
+     * @param senderEmailId
+     * @param password
+     * @param recipientEmailId
+     */
+    public static void sendMail(final String senderEmailId, final String password, final String recipientEmailId) {
+
+        SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS_FOR_MAIL, null, new DataLoadListener<Object>() {
+            @Override
+            public void onDataLoaded(Object obj, int key) {
+                final String logs = (String) obj;
+                if (Utils.isEmpty(logs))
+                    SuperLog.v("SuperLog Db Empty", "Tried sending mail, but the db is empty.");
+
+                else {
+
+                    new AsyncTask<Void, Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+
+                            try {
+                                GMailSender sender = new GMailSender(senderEmailId, password);
+                                sender.sendMail("SuperLogs",
+                                        logs,
+                                        senderEmailId, recipientEmailId);
+                            } catch (Exception e) {
+                                SuperLog.e("Error Sending mail", e.getMessage());
+                            }
+
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+
+                            SuperLog.i("Mail Sent Status", "Success");
+                        }
+                    }.execute();
+
+                }
+
+            }
+        });
+    }
 
     public static void init(@NonNull Application context) {
         CONTEXT = context;

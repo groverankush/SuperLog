@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -23,10 +22,11 @@ import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.model.SuperLogModel;
+import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;
 
-public class SuperLogActivity extends AppCompatActivity implements DataLoadListener<Object>, SuperLogConstants {
+public class SuperLogActivity extends AppCompatActivity implements DataLoadListener<Object>, SuperLogConstants, View.OnClickListener {
 
     private ArrayList<SuperLogModel> logs;
     private RecyclerView recycler;
@@ -45,7 +45,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         if (actionBar == null) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-        }else {
+        } else {
             findViewById(R.id.toolbar).setVisibility(View.GONE);
         }
 
@@ -54,6 +54,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
 
 
         progressBar = (ProgressBar) findViewById(R.id.progress);
+        findViewById(R.id.fab).setOnClickListener(this);
         SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS, null, this);
     }
 
@@ -119,7 +120,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 break;
@@ -145,5 +146,17 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         //unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if (id == R.id.fab) {
+            //String[] credentials = Utils.getCredentials(this);
+
+            //SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");
+            
+        }
     }
 }

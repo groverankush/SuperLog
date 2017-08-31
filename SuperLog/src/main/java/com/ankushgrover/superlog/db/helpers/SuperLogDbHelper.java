@@ -14,6 +14,7 @@ import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.db.table.SuperLogTable;
 import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.TimeUtils;
+import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
 
     public static final int INSERT_LOG = 100;
     public static final int GET_ALL_LOGS = 101;
+    public static final int GET_ALL_LOGS_FOR_MAIL = 102;
 
     private static SuperLogDbHelper mInstance;
 
@@ -40,7 +42,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
      *
      * @param log : log data in form of model.
      */
-    private void insert(SuperLogModel log) {
+    private synchronized void insert(SuperLogModel log) {
         log.setTimestamp(TimeUtils.getTimeStamp());
         ContentValues values = new ContentValues();
         values.put(SuperLogTable.TAG, log.getTag());
@@ -53,7 +55,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
     }
 
 
-    private ArrayList<SuperLogModel> getLogs() {
+    private synchronized ArrayList<SuperLogModel> getLogs() {
         ArrayList<SuperLogModel> logs = new ArrayList<>();
 
         Cursor cursor = DbHelper.getInstance().getReadableDatabase().query(SuperLogTable.TABLE_NAME, null, null, null, null, null, null);
@@ -74,6 +76,34 @@ public class SuperLogDbHelper implements SuperLogConstants {
     }
 
     /**
+     * Method to get logs string for mailing purposes.
+     *
+     * @return
+     */
+    private synchronized String getLogsString(boolean forMail) {
+        String logs = "";
+
+        Cursor cursor = DbHelper.getInstance().getReadableDatabase().query(SuperLogTable.TABLE_NAME, null, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            SuperLogModel log = new SuperLogModel();
+            log.setTimestamp(cursor.getString(cursor.getColumnIndex(SuperLogTable.TIMESTAMP)));
+            log.setTag(cursor.getString(cursor.getColumnIndex(SuperLogTable.TAG)));
+            log.setMessage(cursor.getString(cursor.getColumnIndex(SuperLogTable.MESSAGE)));
+            log.setType(cursor.getInt(cursor.getColumnIndex(SuperLogTable.TYPE)));
+
+            logs += Utils.getLogString(log.getTag(), log.getMessage(), log.getTimestamp(), true);
+        }
+
+        cursor.close();
+
+        if (forMail)
+            DbHelper.getInstance().clear();
+
+        return logs;
+    }
+
+    /**
      * Common method to send broadcast.
      *
      * @param action: Action to perform. It's a string constant defined in {@link SuperLogConstants}
@@ -84,8 +114,6 @@ public class SuperLogDbHelper implements SuperLogConstants {
         intent.putExtra(LOG, log);
 
         LocalBroadcastManager.getInstance(SuperLog.getContext()).sendBroadcast(intent);
-
-        //SuperLog.getContext().sendBroadcast(intent);
     }
 
 
@@ -121,6 +149,10 @@ public class SuperLogDbHelper implements SuperLogConstants {
 
                 case GET_ALL_LOGS:
                     return getLogs();
+
+                case GET_ALL_LOGS_FOR_MAIL:
+                    return getLogsString(true);
+
 
             }
 

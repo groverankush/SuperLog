@@ -12,6 +12,7 @@ public interface SuperLogConstants {
     int WARNING = 2;
     int VERBOSE = 3;
     int NORMAL = 4;
+    int INFO = 5;
 
 
     String ACTION_LOG_INSERTED = "actionLogInserted";

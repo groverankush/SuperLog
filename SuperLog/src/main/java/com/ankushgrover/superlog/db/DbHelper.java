@@ -41,6 +41,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    public void clear(){
+        getWritableDatabase().delete(SuperLogTable.TABLE_NAME, null, null);
+    }
+
     public void getDb() {
         mInstance.getWritableDatabase();
     }
