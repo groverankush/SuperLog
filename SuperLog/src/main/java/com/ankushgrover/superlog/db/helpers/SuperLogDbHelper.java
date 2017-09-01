@@ -92,7 +92,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
             log.setMessage(cursor.getString(cursor.getColumnIndex(SuperLogTable.MESSAGE)));
             log.setType(cursor.getInt(cursor.getColumnIndex(SuperLogTable.TYPE)));
 
-            logs += Utils.getLogString(log.getTag(), log.getMessage(), log.getTimestamp(), true);
+            logs += Utils.getLogStringForMail(log.getTag(), log.getMessage(), log.getTimestamp(), log.getType());
         }
 
         cursor.close();

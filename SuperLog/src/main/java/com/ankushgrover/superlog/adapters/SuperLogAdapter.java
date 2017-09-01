@@ -39,7 +39,7 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
 
         SuperLogModel log = list.get(position);
         holder.log.setText(Utils.getLogString(log.getTag(), log.getMessage(), log.getTimestamp()));
-        holder.log.setTextColor(ContextCompat.getColor(context, Utils.getColor(log.getType())));
+        holder.log.setTextColor(ContextCompat.getColor(context, Utils.getLogType(log.getType()).getColor()));
 
 
     }
