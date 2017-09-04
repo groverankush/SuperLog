@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ankushgrover.superlog.R;
+import com.ankushgrover.superlog.activity.SuperLogActivity;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.Utils;
@@ -23,10 +24,15 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
 
     private Context context;
     private ArrayList<SuperLogModel> list;
+    private ArrayList<SuperLogModel> filtered;
+
 
     public SuperLogAdapter(Context context, ArrayList<SuperLogModel> list) {
         this.context = context;
         this.list = list;
+
+        this.filtered = new ArrayList<>();
+        this.filtered.addAll(list);
     }
 
     @Override
@@ -37,7 +43,7 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
     @Override
     public void onBindViewHolder(Holder holder, int position) {
 
-        SuperLogModel log = list.get(position);
+        SuperLogModel log = filtered.get(position);
         holder.log.setText(Utils.getLogString(log.getTag(), log.getMessage(), log.getTimestamp()));
         holder.log.setTextColor(ContextCompat.getColor(context, Utils.getLogType(log.getType()).getColor()));
 
@@ -46,8 +52,42 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return filtered.size();
     }
+
+
+    /**
+     * Method to filter results based on user input.
+     *
+     * @param text
+     */
+    public void filter(String text) {
+        filtered.clear();
+        if (text == null || text.length() == 0) {
+            filtered.addAll(list);
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getMessage().toLowerCase().startsWith(text.toLowerCase())
+                        || list.get(i).getTag().startsWith(text))
+                    filtered.add(list.get(i));
+            }
+        }
+        ((SuperLogActivity) context).displayEmptyText(filtered.size() == 0);
+
+        notifyDataSetChanged();
+    }
+
+
+    public int checkAndAddLog(SuperLogModel log, String query) {
+        if (Utils.isEmpty(query) || log.getMessage().toLowerCase().contains(query)
+                || log.getTag().toLowerCase().contains(query)) {
+            filtered.add(log);
+            notifyDataSetChanged();
+            return filtered.size();
+        }
+        return 0;
+    }
+
 
     class Holder extends RecyclerView.ViewHolder {
 

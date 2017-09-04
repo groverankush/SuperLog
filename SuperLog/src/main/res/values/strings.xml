@@ -2,4 +2,6 @@
     <string name="app_name">superlog</string>
 
     <string name="test">Test new v*****************</string>
+    <string name="search">Search</string>
+    <string name="empty_logs">No logs to show</string>
 </resources>

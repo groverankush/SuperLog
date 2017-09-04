@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.ankushgrover.superlog.R;
@@ -26,7 +30,7 @@ import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;
 
-public class SuperLogActivity extends AppCompatActivity implements DataLoadListener<Object>, SuperLogConstants, View.OnClickListener {
+public class SuperLogActivity extends AppCompatActivity implements DataLoadListener<Object>, SuperLogConstants, View.OnClickListener, SearchView.OnQueryTextListener {
 
     private ArrayList<SuperLogModel> logs;
     private RecyclerView recycler;
@@ -34,6 +38,8 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     private ProgressBar progressBar;
     private BroadcastReceiver receiver;
     private boolean scroll = true;
+    private SearchView searchView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +104,14 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
 
                 switch (intent.getAction()) {
                     case ACTION_LOG_INSERTED:
-                        logs.add((SuperLogModel) intent.getParcelableExtra(LOG));
-                        adapter.notifyDataSetChanged();
-                        if (scroll)
-                            recycler.smoothScrollToPosition(logs.size() - 1);
+                        SuperLogModel log = intent.getParcelableExtra(LOG);
+                        logs.add(log);
+                        if (searchView != null) {
+                            int size = adapter.checkAndAddLog(log, searchView.getQuery().toString());
+                            if (scroll && size > 0)
+                                recycler.smoothScrollToPosition(size - 1);
+                        }
+
                         break;
                 }
             }
@@ -120,6 +130,13 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+        } else if (id == R.id.action_search) {
+
+        }
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -136,6 +153,8 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
                 progressBar.setVisibility(View.GONE);
                 logs = new ArrayList<>();
                 logs = ((ArrayList<SuperLogModel>) obj);
+                if (logs.size() == 0)
+                    displayEmptyText(true);
                 initRecycler();
                 break;
         }
@@ -145,7 +164,6 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        //unregisterReceiver(receiver);
     }
 
     @Override
@@ -153,10 +171,75 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         int id = v.getId();
 
         if (id == R.id.fab) {
-            //String[] credentials = Utils.getCredentials(this);
+            String[] credentials = Utils.getCredentials(this);
 
-            //SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");
-            
+            SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");
+
         }
+    }
+
+    /**
+     * Method to display empty list message on screen when filtered countries are 0.
+     *
+     * @param show
+     */
+    public void displayEmptyText(boolean show) {
+
+        findViewById(R.id.empty).setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.ag_sl_menu_search, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+
+        searchView = (SearchView) item.getActionView();
+        searchView.setQueryHint(getString(R.string.search));
+
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(item, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                displayEmptyText(false);
+                return true;
+            }
+        });
+
+        final EditText searchText = (EditText) searchView.findViewById(R.id.search_src_text);
+
+        searchView.findViewById(R.id.search_close_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayEmptyText(false);
+
+                searchText.setText("");
+                searchView.setQuery("", false);
+
+            }
+        });
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (adapter != null)
+            adapter.filter(newText);
+        return false;
     }
 }

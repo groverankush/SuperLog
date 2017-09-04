@@ -1,18 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ankushgrover.android_super_log.MainActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_small">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/tag"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Tag" />
+
+                <EditText
+                    android:id="@+id/message"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Message" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/debug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Debug"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Error"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/verbose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Verbose"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/warn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Warning"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Info"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:text="Consecutive Logs"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start" />
+        </LinearLayout>
+
+    </ScrollView>
 
 
     <com.ankushgrover.superlog.views.SuperLogView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Hello....."
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:textStyle="bold" />
 
 </FrameLayout>

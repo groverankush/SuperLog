@@ -1,8 +1,13 @@
 package com.ankushgrover.superlog.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewAnimationUtils;
 
 import com.ankushgrover.superlog.R;
 import com.ankushgrover.superlog.SuperLog;
@@ -64,12 +69,16 @@ public class Utils implements SuperLogConstants {
 
     public static String[] getCredentials(Context context) {
 
-
         Properties properties = new Properties();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        InputStream stream = loader.getResourceAsStream("/temp.properties");
+
+
+/*        Properties properties = new Properties();
         InputStream inputStream =
-                context.getClass().getClassLoader().getResourceAsStream("local.properties");
+                context.getClass().getClassLoader().getResourceAsStream("local.properties");*/
         try {
-            properties.load(inputStream);
+            properties.load(stream);
             String email = properties.getProperty("emailId");
             String pass = properties.getProperty("password");
             return new String[]{email, pass};
@@ -80,6 +89,74 @@ public class Utils implements SuperLogConstants {
         }
 
         return new String[]{"hello", "world"};
+
+
+    }
+
+    /**
+     * Manage view animation on visibility change.
+     *
+     * @param v
+     * @param makeVisible
+     */
+    public static void manageViewVisibility(final View v, final boolean makeVisible) {
+        if (makeVisible)
+            v.setVisibility(View.VISIBLE);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(v, "alpha", (makeVisible ? 0f : 1f), (makeVisible ? 1f : 0f));
+        animator.setDuration(300);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!makeVisible)
+                    v.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animator.start();
+    }
+
+    public static void manageViewVisibilityReveal(final View v, boolean makeVisible) {
+
+        int cx = v.getWidth() / 2;
+        int cy = v.getHeight() / 2;
+
+        float radius = (float) Math.hypot(cx, cy);
+
+
+        Animator anim = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+            if (makeVisible) {
+                anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, radius);
+                v.setVisibility(View.VISIBLE);
+            } else {
+                anim = ViewAnimationUtils.createCircularReveal(v, cx, cy, radius, 0);
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        v.setVisibility(View.GONE);
+                    }
+                });
+            }
+            anim.start();
+        } else manageViewVisibility(v, makeVisible);
 
 
     }
