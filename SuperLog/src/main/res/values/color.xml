@@ -6,4 +6,8 @@
     <color name="verbose">@android:color/darker_gray</color>
     <color name="info">#4CAF50</color>
 
+    <color name="blue_grey">#607D8B</color>
+    <color name="dark">#546E7A</color>
+    <color name="accent">#263238</color>
+
 </resources>

@@ -4,10 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-        android:allowBackup="true"
-        android:label="@string/app_name">
-        <activity android:name=".activity.SuperLogActivity" />
+    <application>
+        <activity
+            android:theme="@style/ag_sl_SuperLogTheme"
+            android:name=".activity.SuperLogActivity"
+            android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>
