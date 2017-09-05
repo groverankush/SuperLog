@@ -247,4 +247,9 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
             adapter.filter(newText);
         return false;
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+    }
 }

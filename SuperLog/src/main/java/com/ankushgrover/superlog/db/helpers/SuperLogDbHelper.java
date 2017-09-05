@@ -133,7 +133,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
             this.bundle = bundle;
             this.listener = listener;
 
-            execute();
+            executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         @Override
