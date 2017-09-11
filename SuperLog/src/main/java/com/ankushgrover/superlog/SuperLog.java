@@ -100,16 +100,56 @@ public class SuperLog implements SuperLogConstants {
 
 
     public static void sendMail() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:"));
-        //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
-        try {
-            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                getContext().startActivity(intent);
+
+
+        SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS_FOR_MAIL, null, new DataLoadListener<Object>() {
+            @Override
+            public void onDataLoaded(Object obj, int key) {
+                final String logs = (String) obj;
+                if (Utils.isEmpty(logs))
+                    SuperLog.v("SuperLog Db Empty", "Tried sending mail, but the db is empty.");
+
+                else {
+
+                    new AsyncTask<Void, Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground(Void... params) {
+
+                            try {
+
+                                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra(Intent.EXTRA_SUBJECT, SuperLog.class.getSimpleName());
+                                intent.setData(Uri.parse("mailto:"));
+                                intent.putExtra(Intent.EXTRA_TEXT, logs);
+                                //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
+
+                                if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                                    getContext().startActivity(intent);
+                                }
+
+                            } catch (Exception e) {
+                                SuperLog.e("Error Sending mail", e.getMessage());
+                            }
+
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+
+                            SuperLog.i("Mail Sent Status", "Success");
+                        }
+                    }.execute();
+
+                }
+
             }
-        } catch (Exception e) {
-            SuperLog.e("Error Sending Email", "Cannot send email");
-        }
+        });
+
+
     }
 
     /**
