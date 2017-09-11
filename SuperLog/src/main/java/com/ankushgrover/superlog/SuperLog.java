@@ -1,11 +1,11 @@
 package com.ankushgrover.superlog;
 
 import android.app.Application;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Html;
-import android.text.SpannableString;
 import android.util.Log;
 
 import com.ankushgrover.superlog.constants.SuperLogConstants;
@@ -98,8 +98,23 @@ public class SuperLog implements SuperLogConstants {
 
     }
 
+
+    public static void sendMail() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
+        try {
+            if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                getContext().startActivity(intent);
+            }
+        } catch (Exception e) {
+            SuperLog.e("Error Sending Email", "Cannot send email");
+        }
+    }
+
     /**
      * Method to send mail to recipient's email id.
+     *
      * @param senderEmailId
      * @param password
      * @param recipientEmailId

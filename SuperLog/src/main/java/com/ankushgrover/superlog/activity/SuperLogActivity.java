@@ -27,7 +27,6 @@ import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.model.SuperLogModel;
-import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -176,9 +175,10 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         int id = v.getId();
 
         if (id == R.id.fab) {
-            String[] credentials = Utils.getCredentials(this);
+            SuperLog.sendMail();
+/*            String[] credentials = Utils.getCredentials(this);
 
-            SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");
+            SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");*/
 
         }
     }
