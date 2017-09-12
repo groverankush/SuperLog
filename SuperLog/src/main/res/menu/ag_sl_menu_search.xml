@@ -5,9 +5,14 @@
     <item
         android:id="@+id/action_search"
         android:title="@string/search"
-        android:icon="@mipmap/ag_sl_ic_search"
+        android:icon="@drawable/ag_sl_ic_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView"/>
+
+    <item android:title="@string/delete"
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ag_sl_ic_delete"
+        app:showAsAction="always"/>
 
 
 </menu>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -24,9 +25,11 @@ import com.ankushgrover.superlog.R;
 import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.adapters.SuperLogAdapter;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
+import com.ankushgrover.superlog.db.DbHelper;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.model.SuperLogModel;
+import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -39,6 +42,8 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     private BroadcastReceiver receiver;
     private boolean scroll = true;
     private SearchView searchView;
+    private LinearLayoutManager layoutManager;
+    private FloatingActionButton moveFab;
 
 
     @Override
@@ -59,15 +64,18 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        moveFab = (FloatingActionButton) findViewById(R.id.move);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         findViewById(R.id.fab).setOnClickListener(this);
+        moveFab.setOnClickListener(this);
         SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS, null, this);
     }
 
     private void initRecycler() {
         recycler = (RecyclerView) findViewById(R.id.recycler);
         adapter = new SuperLogAdapter(this, logs);
-        recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
 
         recycler.scrollToPosition(logs.size() - 1);
@@ -83,11 +91,21 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy < 0)
-                    scroll = false;
+                System.out.println("dx: " + dx + "dy : " + dy);
 
-                if (dy > 60)
-                    scroll = true;
+                if (dy < 0) {
+                    scroll = false;
+                    moveFab.setVisibility(View.VISIBLE);
+                    //Utils.manageViewVisibilityReveal(moveFab, true);
+                } else {
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() == (logs.size() - 1)) {
+                        scroll = true;
+                        Utils.manageViewVisibility(moveFab, false);
+                    }
+
+                }
+/*                if (dy > 60)
+                    scroll = true;*/
 
 
             }
@@ -139,12 +157,9 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
             onBackPressed();
         } else if (id == R.id.action_search) {
 
-        }
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
+        } else if (id == R.id.action_delete) {
+            DbHelper.getInstance().clear();
+            adapter.removeAllLogs();
         }
 
         return super.onOptionsItemSelected(item);
@@ -179,6 +194,10 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
 /*            String[] credentials = Utils.getCredentials(this);
 
             SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");*/
+
+        } else if (id == R.id.move) {
+            recycler.smoothScrollToPosition(logs.size() - 1);
+            scroll = true;
 
         }
     }

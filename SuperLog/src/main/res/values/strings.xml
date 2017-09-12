@@ -4,4 +4,5 @@
     <string name="test">Test new v*****************</string>
     <string name="search">Search</string>
     <string name="empty_logs">No logs to show</string>
+    <string name="delete">Delete</string>
 </resources>

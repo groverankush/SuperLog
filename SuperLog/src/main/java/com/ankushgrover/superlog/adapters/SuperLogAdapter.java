@@ -88,6 +88,12 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
         return 0;
     }
 
+    public void removeAllLogs() {
+        filtered.clear();
+        list.clear();
+        notifyDataSetChanged();
+    }
+
 
     class Holder extends RecyclerView.ViewHolder {
 
