@@ -91,23 +91,16 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                System.out.println("dx: " + dx + "dy : " + dy);
-
-                if (dy < 0) {
+                if (dy < 0 && moveFab.getVisibility() == View.GONE) {
                     scroll = false;
-                    moveFab.setVisibility(View.VISIBLE);
-                    //Utils.manageViewVisibilityReveal(moveFab, true);
+                    Utils.manageViewVisibilityReveal(moveFab, true);
                 } else {
-                    if (layoutManager.findLastCompletelyVisibleItemPosition() == (logs.size() - 1)) {
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() == (logs.size() - 1) &&
+                            moveFab.getVisibility() == View.VISIBLE) {
                         scroll = true;
-                        Utils.manageViewVisibility(moveFab, false);
+                        Utils.manageViewVisibilityReveal(moveFab, false);
                     }
-
                 }
-/*                if (dy > 60)
-                    scroll = true;*/
-
-
             }
         });
 
@@ -191,9 +184,6 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
 
         if (id == R.id.fab) {
             SuperLog.sendMail();
-/*            String[] credentials = Utils.getCredentials(this);
-
-            SuperLog.sendMail(credentials[0], credentials[1], "ankush.grover@finoit.co.in");*/
 
         } else if (id == R.id.move) {
             recycler.smoothScrollToPosition(logs.size() - 1);

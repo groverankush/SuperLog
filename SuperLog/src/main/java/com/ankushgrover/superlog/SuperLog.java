@@ -201,8 +201,41 @@ public class SuperLog implements SuperLogConstants {
         });
     }
 
+
+    public static final class Builder {
+        private Application CONTEXT;
+        private boolean showSuperLogView = true;
+        private String email, pass;
+
+        public Builder() {
+        }
+
+        public Builder init(@NonNull Application context) {
+            this.CONTEXT = context;
+            return this;
+        }
+
+        public Builder showSuperLogView(boolean show) {
+            this.showSuperLogView = show;
+            return this;
+        }
+
+        public Builder setCredentials(@NonNull String email, @NonNull String pass) {
+
+            //// TODO: 13-09-2017 Add validation and save in preferences (check)
+            this.email = email;
+            this.pass = pass;
+
+            return this;
+        }
+
+
+    }
+
+
     public static void init(@NonNull Application context) {
         CONTEXT = context;
+
     }
 
     public static Application getContext() {

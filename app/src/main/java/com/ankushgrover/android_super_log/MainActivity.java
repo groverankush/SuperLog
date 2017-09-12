@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new SuperLog.Builder().init(getApplication());
+
         SuperLog.init(getApplication());
 
         button = (Button) findViewById(R.id.start);
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         random = new Random();
+    }
+
+    private void scheduleTimer() {
         timer = new Timer();
         task = new TimerTask() {
             @Override
@@ -87,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
+
+        timer.scheduleAtFixedRate(task, 0, 5000);
     }
 
     @Override
@@ -128,14 +135,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.start:
-                if (!isPressed){
+                if (!isPressed) {
                     button.setText("Stop");
-                    timer.scheduleAtFixedRate(task, 0, 5000);
-                }
-
-                else{
+                    scheduleTimer();
+                } else {
                     button.setText("Start");
                     timer.cancel();
+                    task.cancel();
                 }
 
 
