@@ -8,20 +8,20 @@ ext {
     libraryName = 'SuperLog'
     artifact = 'SuperLog'
 
-    libraryDescription = 'Super Log is a logging mechanism for Android Apps. It provides the functionality of displaying logs in the app itself.'
+    libraryDescription = 'Super Log brings a new  logging mechanism for Android Apps. It provides the functionality of displaying logs in the app itself. User can mail the logs to any email address for further use.'
 
     siteUrl = 'https://github.com/groverankush/SuperLog'
     gitUrl = 'https://github.com/groverankush/SuperLog.git'
 
-    libraryVersion = '1.0.5'
+    libraryVersion = '1.0.0'
 
     developerId = 'ankushgrover'
     developerName = 'Ankush Grover'
     developerEmail = 'ankush.dev2@gmail.com'
 
-    licenseName = 'GNU General Public License v3.0'
-    licenseUrl = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-    allLicenses = ["GPL-3.0"]
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
 }
 
 /*ext {
