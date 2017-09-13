@@ -5,4 +5,8 @@
     <string name="search">Search</string>
     <string name="empty_logs">No logs to show</string>
     <string name="delete">Delete</string>
+    <string name="empty_credentials">Credentials are empty</string>
+    <string name="empty_recipient_address">Empty recipient\'s email address</string>
+    <string name="device_not_connected">Device is not connected to internet</string>
+    <string name="network_error">Network Error</string>
 </resources>

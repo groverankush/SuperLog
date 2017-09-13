@@ -3,5 +3,9 @@
     <declare-styleable name="SuperLogView">
         <attr name="android:text" />
         <attr name="android:background" />
+
+
+        <attr name="android:visibility"/>
+
     </declare-styleable>
 </resources>

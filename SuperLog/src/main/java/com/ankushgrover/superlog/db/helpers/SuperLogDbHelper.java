@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -81,6 +82,8 @@ public class SuperLogDbHelper implements SuperLogConstants {
      * @return
      */
     private synchronized String getLogsString(boolean forMail) {
+
+
         String logs = "";
 
         Cursor cursor = DbHelper.getInstance().getReadableDatabase().query(SuperLogTable.TABLE_NAME, null, null, null, null, null, null);
@@ -97,8 +100,14 @@ public class SuperLogDbHelper implements SuperLogConstants {
 
         cursor.close();
 
-        if (forMail)
+        if (forMail) {
+            if (!Utils.isEmpty(logs)) {
+                String deviceInfo = "Device: " + Build.BRAND + " " + Build.MODEL + "\n" + "OS Version: " + Build.VERSION.RELEASE + "\n\n";
+                logs = deviceInfo + logs;
+            }
             DbHelper.getInstance().clear();
+        }
+
 
         return logs;
     }
@@ -113,7 +122,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
         Intent intent = new Intent(action);
         intent.putExtra(LOG, log);
 
-        LocalBroadcastManager.getInstance(SuperLog.getContext()).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(SuperLog.getBuilder().getContext()).sendBroadcast(intent);
     }
 
 

@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static DbHelper mInstance;
 
     private DbHelper() {
-        super(SuperLog.getContext(), NAME, null, DB_VERSION);
+        super(SuperLog.getBuilder().getContext(), NAME, null, DB_VERSION);
     }
 
     public static synchronized DbHelper getInstance() {
@@ -41,7 +41,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
-    public void clear(){
+    public void clear() {
         getWritableDatabase().delete(SuperLogTable.TABLE_NAME, null, null);
     }
 

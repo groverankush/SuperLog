@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.ankushgrover.superlog.R;
+import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.activity.SuperLogActivity;
 
 
@@ -46,15 +47,33 @@ public class SuperLogView extends AppCompatTextView implements View.OnClickListe
         int backgroundColor = ContextCompat.getColor(context, android.R.color.holo_red_light);
         String text = "Logs";
         int gravity = Gravity.CENTER;
+        int visibility = SuperLog.getBuilder().isSuperLogViewVisible() ? VISIBLE : GONE;
 
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SuperLogView);
+
 
             if (a.hasValue(R.styleable.SuperLogView_android_text))
                 text = a.getString(R.styleable.SuperLogView_android_text);
 
             if (a.hasValue(R.styleable.SuperLogView_android_background))
                 backgroundColor = a.getInt(R.styleable.SuperLogView_android_background, backgroundColor);
+
+
+            if (visibility == VISIBLE && a.hasValue(R.styleable.SuperLogView_android_visibility)) {
+                int index = a.getInt(R.styleable.SuperLogView_android_visibility, visibility);
+
+                switch (index) {
+                    case 0:
+                        visibility = VISIBLE;
+                        break;
+                    case 1:
+                    case 2:
+                        visibility = GONE;
+                        break;
+                }
+
+            }
 
             a.recycle();
         }
@@ -65,6 +84,7 @@ public class SuperLogView extends AppCompatTextView implements View.OnClickListe
         setBackgroundColor(backgroundColor);
         setGravity(gravity);
         setTypeface(getTypeface(), Typeface.BOLD);
+        setVisibility(visibility);
 
         setOnClickListener(this);
     }

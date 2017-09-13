@@ -13,6 +13,7 @@ import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.mail.GMailSender;
 import com.ankushgrover.superlog.model.SuperLogModel;
+import com.ankushgrover.superlog.utils.NetworkUtils;
 import com.ankushgrover.superlog.utils.Utils;
 
 /**
@@ -20,8 +21,9 @@ import com.ankushgrover.superlog.utils.Utils;
  */
 
 public class SuperLog implements SuperLogConstants {
+    private static Builder BUILDER;
 
-    private static Application CONTEXT;
+    //private static Application CONTEXT;
 
     /**
      * Debug log
@@ -111,38 +113,22 @@ public class SuperLog implements SuperLogConstants {
 
                 else {
 
-                    new AsyncTask<Void, Void, Void>() {
+                    try {
 
-                        @Override
-                        protected Void doInBackground(Void... params) {
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, SuperLog.class.getSimpleName());
+                        intent.setData(Uri.parse("mailto:"));
+                        intent.putExtra(Intent.EXTRA_TEXT, logs);
+                        //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
 
-                            try {
-
-                                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                intent.putExtra(Intent.EXTRA_SUBJECT, SuperLog.class.getSimpleName());
-                                intent.setData(Uri.parse("mailto:"));
-                                intent.putExtra(Intent.EXTRA_TEXT, logs);
-                                //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
-
-                                if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                                    getContext().startActivity(intent);
-                                }
-
-                            } catch (Exception e) {
-                                SuperLog.e("Error Sending mail", e.getMessage());
-                            }
-
-                            return null;
+                        if (intent.resolveActivity(BUILDER.getContext().getPackageManager()) != null) {
+                            BUILDER.getContext().startActivity(intent);
                         }
 
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            super.onPostExecute(aVoid);
-
-                            SuperLog.i("Mail Sent Status", "Success");
-                        }
-                    }.execute();
+                    } catch (Exception e) {
+                        SuperLog.e("Error Sending mail", e.getMessage());
+                    }
 
                 }
 
@@ -153,13 +139,19 @@ public class SuperLog implements SuperLogConstants {
     }
 
     /**
-     * Method to send mail to recipient's email id.
+     * Method to send mail in background.
+     * <p>
+     * INFO: IT IS ASSUMED THAT THE USER HAS ALREADY SUPPLIED HIS/HER GMAIL'S USERNAME AND PASSWORD
+     * FOR THE SAME.
+     * <p>
+     * CAUTION: YOU NEED TO ALLOW LESS SECURE APPS FOR ACCESSING THIS FEATURE.
+     * Please refer https://myaccount.google.com/lesssecureapps
      *
      * @param senderEmailId
      * @param password
      * @param recipientEmailId
      */
-    public static void sendMail(final String senderEmailId, final String password, final String recipientEmailId) {
+    public static void sendMailInBackground(final String senderEmailId, final String password, final String recipientEmailId) {
 
         SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS_FOR_MAIL, null, new DataLoadListener<Object>() {
             @Override
@@ -175,14 +167,17 @@ public class SuperLog implements SuperLogConstants {
                         @Override
                         protected Void doInBackground(Void... params) {
 
-                            try {
-                                GMailSender sender = new GMailSender(senderEmailId, password);
-                                sender.sendMail("SuperLogs",
-                                        logs,
-                                        senderEmailId, recipientEmailId);
-                            } catch (Exception e) {
-                                SuperLog.e("Error Sending mail", e.getMessage());
+                            if (NetworkUtils.isNetworkAvailable(BUILDER.getContext(), true)) {
+                                try {
+                                    GMailSender sender = new GMailSender(senderEmailId, password);
+                                    sender.sendMail("SuperLogs",
+                                            logs,
+                                            senderEmailId, recipientEmailId);
+                                } catch (Exception e) {
+                                    SuperLog.e("Error Sending mail", e.getMessage());
+                                }
                             }
+
 
                             return null;
                         }
@@ -190,8 +185,6 @@ public class SuperLog implements SuperLogConstants {
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
-
-                            SuperLog.i("Mail Sent Status", "Success");
                         }
                     }.execute();
 
@@ -201,22 +194,63 @@ public class SuperLog implements SuperLogConstants {
         });
     }
 
+    /**
+     * Method to send mail in background. Recipient's email id is required.
+     * <p>
+     * INFO: IT IS ASSUMED THAT THE USER HAS ALREADY SUPPLIED HIS/HER GMAIL'S USERNAME AND PASSWORD
+     * FOR THE SAME.
+     * <p>
+     * CAUTION: YOU NEED TO ALLOW LESS SECURE APPS FOR ACCESSING THIS FEATURE.
+     * Please refer https://myaccount.google.com/lesssecureapps
+     *
+     * @param recipientEmailId
+     */
+    public static void sendMailInBackground(final String recipientEmailId) {
+        String email = BUILDER.getEmail();
+        String pass = BUILDER.getPass();
 
-    public static final class Builder {
-        private Application CONTEXT;
-        private boolean showSuperLogView = true;
+        if (Utils.isEmpty(email) || Utils.isEmpty(pass)) {
+            SuperLog.log(BUILDER.getContext().getString(R.string.empty_credentials));
+            return;
+        }
+
+        if (Utils.isEmpty(recipientEmailId)) {
+            SuperLog.log(BUILDER.getContext().getString(R.string.empty_recipient_address));
+            return;
+        }
+
+        sendMailInBackground(email, pass, recipientEmailId);
+
+    }
+
+    /**
+     * Method to initialize SuperLog
+     *
+     * @param builder
+     */
+    public static void init(@NonNull Builder builder) {
+        BUILDER = builder;
+    }
+
+    public static Builder getBuilder() {
+        return BUILDER;
+    }
+
+    public static class Builder {
+
+
+        private Application context;
+        private boolean superLogViewVisibility;
         private String email, pass;
 
-        public Builder() {
+        public Builder(Application context) {
+            this.context = context;
+            this.superLogViewVisibility = true;
         }
 
-        public Builder init(@NonNull Application context) {
-            this.CONTEXT = context;
-            return this;
-        }
+        public Builder setSuperLogViewVisibility(boolean isVisible) {
 
-        public Builder showSuperLogView(boolean show) {
-            this.showSuperLogView = show;
+            this.superLogViewVisibility = isVisible;
             return this;
         }
 
@@ -229,17 +263,41 @@ public class SuperLog implements SuperLogConstants {
             return this;
         }
 
+        /**
+         * @return true: Should show view; false: Should not show view
+         */
+        public boolean isSuperLogViewVisible() {
+            return superLogViewVisibility;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getPass() {
+            return pass;
+        }
+
+        public void setPass(String pass) {
+            this.pass = pass;
+        }
+
+        public Application getContext() {
+            return context;
+        }
+
+        public void setContext(Application context) {
+            this.context = context;
+        }
 
     }
 
-
-    public static void init(@NonNull Application context) {
-        CONTEXT = context;
-
-    }
-
-    public static Application getContext() {
+    /*public static Application getContext() {
         return CONTEXT;
-    }
+    }*/
 
 }

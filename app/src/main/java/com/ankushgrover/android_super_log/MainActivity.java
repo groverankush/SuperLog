@@ -24,11 +24,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SuperLog.init(new SuperLog.Builder(getApplication())
+                .setSuperLogViewVisibility(true)
+                .setCredentials("ankush.testing2@gmail.com", "testing1234"));
+
+
         setContentView(R.layout.activity_main);
 
-        new SuperLog.Builder().init(getApplication());
 
-        SuperLog.init(getApplication());
+        SuperLog.sendMailInBackground("ankush.grover@finoit.co.in");
 
         button = (Button) findViewById(R.id.start);
 
@@ -43,24 +48,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         random = new Random();
     }
 
-    private void scheduleTimer() {
+    private void scheduleTimer(final String tag, final String message) {
         timer = new Timer();
         task = new TimerTask() {
             @Override
             public void run() {
-
-                String tag = ((EditText) findViewById(R.id.tag)).getText().toString();
-                String message = ((EditText) findViewById(R.id.message)).getText().toString();
-
-                if (tag.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Please Enter Tag", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (message.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Please Enter Message", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
                 int type = random.nextInt(6);
 
@@ -93,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-        timer.scheduleAtFixedRate(task, 0, 5000);
+        timer.scheduleAtFixedRate(task, 0, 500);
     }
 
     @Override
@@ -137,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.start:
                 if (!isPressed) {
                     button.setText("Stop");
-                    scheduleTimer();
+                    scheduleTimer(tag, message);
                 } else {
                     button.setText("Start");
                     timer.cancel();

@@ -3,12 +3,13 @@
     package="com.ankushgrover.superlog">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application>
         <activity
-            android:theme="@style/ag_sl_SuperLogTheme"
             android:name=".activity.SuperLogActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ag_sl_SuperLogTheme" />
     </application>
 
 </manifest>

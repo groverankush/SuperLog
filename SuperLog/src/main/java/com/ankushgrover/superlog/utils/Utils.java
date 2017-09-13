@@ -39,7 +39,7 @@ public class Utils implements SuperLogConstants {
 
     public static String getLogStringForMail(@NonNull String tag, @NonNull String message, @NonNull String timeStamp, int type) {
 
-        return String.format("%s %s/%s: %s \n", timeStamp, Utils.getLogType(type).getText(), tag, message);
+        return String.format("%s %s/%s: %s \n", timeStamp, Utils.getLogType(type).getText().charAt(0), tag, message);
     }
 
     public static Type getLogType(int type) {
