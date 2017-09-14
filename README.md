@@ -29,7 +29,7 @@ It's preferable to initialize SuperLog in your application's `onCreate()` method
 ```
 SuperLog.init(new SuperLog.Builder(getApplication())
         .setSuperLogViewVisibility(true) \\For globally changing SuperLogView's visibility
-        .setCredentials("ankush.testing2@gmail.com", "testing1234")); \\For sending email in background
+        .setCredentials("YOUR_GMAIL_ADDRESS", "YOUR_PASSWORD")); \\For sending email in background
 ```
 For sending mails in the background, you need to specify email address and password of the account. As the library uses explicit SMTP server for sending mails in background, so for that account credentials are required.
 IF YOU ARE USING THIS FEATURE, IT IS HIGHLY RECOMMENDED TO USE A TEST ACCOUNT IN PLACE OF YOUR PRIMARY ACCOUNT. YOU ALSO NEED TO ALLOW ACCESS TO LESS SECURE APPS FOR YOUR GMAIL ACCOUNT. More about this [here](https://support.google.com/accounts/answer/6010255?hl=en) and [here](https://myaccount.google.com/lesssecureapps). 
