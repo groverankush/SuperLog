@@ -26,14 +26,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         SuperLog.init(new SuperLog.Builder(getApplication())
-                .setSuperLogViewVisibility(true)
-                .setCredentials("ankush.testing2@gmail.com", "testing1234"));
+                .setSuperLogViewVisibility(true));
 
 
         setContentView(R.layout.activity_main);
 
-
-        SuperLog.sendMailInBackground("ankush.grover@finoit.co.in");
 
         button = (Button) findViewById(R.id.start);
 
