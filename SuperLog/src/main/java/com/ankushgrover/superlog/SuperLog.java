@@ -80,7 +80,7 @@ public class SuperLog implements SuperLogConstants {
      *
      * @param msg
      */
-    public static void log(String msg) {
+    public static void log(@NonNull String msg) {
         Log.v(SuperLog.class.getSimpleName(), msg);
         log(NORMAL, SuperLog.class.getSimpleName(), msg);
     }
@@ -88,16 +88,17 @@ public class SuperLog implements SuperLogConstants {
 
     private static void log(int type, String tag, String msg) {
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(LOG, new SuperLogModel(tag, msg, type));
+        if (!(Utils.isEmpty(tag) || Utils.isEmpty(msg))) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(LOG, new SuperLogModel(tag, msg, type));
 
-        SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.INSERT_LOG, bundle, new DataLoadListener<Object>() {
-            @Override
-            public void onDataLoaded(Object obj, int key) {
+            SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.INSERT_LOG, bundle, new DataLoadListener<Object>() {
+                @Override
+                public void onDataLoaded(Object obj, int key) {
 
-            }
-        });
-
+                }
+            });
+        }
     }
 
 
