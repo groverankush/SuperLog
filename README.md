@@ -15,7 +15,7 @@ These are the all the instructions you need to use SuperLog in your apps.
 Just a simple debug `debugCompile` will get you up and running with SuperLog.
 
 ```
-debugCompile 'com.ankushgrover:SuperLog:1.0.0'
+debugCompile 'com.ankushgrover:SuperLog:1.0.9'
 ```
 `debugCompile` will make sure that the library is used in debug build only.
 
