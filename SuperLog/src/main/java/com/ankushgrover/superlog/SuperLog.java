@@ -88,7 +88,7 @@ public class SuperLog implements SuperLogConstants {
 
     private static void log(int type, String tag, String msg) {
 
-        if (!(Utils.isEmpty(tag) || Utils.isEmpty(msg))) {
+        if (!(!BUILDER.isAddLogs() || Utils.isEmpty(tag) || Utils.isEmpty(msg))) {
             Bundle bundle = new Bundle();
             bundle.putParcelable(LOG, new SuperLogModel(tag, msg, type));
 
@@ -242,16 +242,17 @@ public class SuperLog implements SuperLogConstants {
 
         private Application context;
         private boolean superLogViewVisibility;
+        private boolean addLogs;
         private String email, pass;
 
         public Builder(Application context) {
             this.context = context;
             this.superLogViewVisibility = true;
+            this.addLogs = true;
         }
 
-        public Builder setSuperLogViewVisibility(boolean isVisible) {
-
-            this.superLogViewVisibility = isVisible;
+        public Builder addLogsToDb(boolean addLogs) {
+            this.addLogs = addLogs;
             return this;
         }
 
@@ -262,6 +263,24 @@ public class SuperLog implements SuperLogConstants {
             this.pass = pass;
 
             return this;
+        }
+
+        public boolean isSuperLogViewVisibility() {
+            return superLogViewVisibility;
+        }
+
+        public Builder setSuperLogViewVisibility(boolean isVisible) {
+
+            this.superLogViewVisibility = isVisible;
+            return this;
+        }
+
+        public boolean isAddLogs() {
+            return addLogs;
+        }
+
+        public void setAddLogs(boolean addLogs) {
+            this.addLogs = addLogs;
         }
 
         /**
