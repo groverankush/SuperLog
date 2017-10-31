@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.ankushgrover.superlog.bg.LogCatThread;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
@@ -195,6 +196,25 @@ public class SuperLog implements SuperLogConstants {
         });
     }
 
+    public static void mailLogCat(final String senderEmailId, final String password, final String recipientEmailId) {
+        String logs = BUILDER.getLogCat();
+        if (Utils.isEmpty(logs)) {
+            return;
+        }
+
+
+        if (NetworkUtils.isNetworkAvailable(BUILDER.getContext(), true)) {
+            try {
+                GMailSender sender = new GMailSender(senderEmailId, password);
+                sender.sendMail("SuperLogs",
+                        logs,
+                        senderEmailId, recipientEmailId);
+            } catch (Exception e) {
+                SuperLog.e("Error Sending mail", e.getMessage());
+            }
+        }
+    }
+
     /**
      * Method to send mail in background. Recipient's email id is required.
      * <p>
@@ -244,6 +264,7 @@ public class SuperLog implements SuperLogConstants {
         private boolean superLogViewVisibility;
         private boolean addLogs;
         private String email, pass;
+        private LogCatThread logCatThread;
 
         public Builder(Application context) {
             this.context = context;
@@ -275,6 +296,20 @@ public class SuperLog implements SuperLogConstants {
             return this;
         }
 
+        public Builder startLogCat() {
+            this.logCatThread = new LogCatThread();
+            logCatThread.run();
+            return this;
+        }
+
+        public Builder stopLogCat() {
+            if (this.logCatThread != null) {
+                this.logCatThread.interrupt();
+                this.logCatThread = null;
+            }
+            return this;
+        }
+
         public boolean isAddLogs() {
             return addLogs;
         }
@@ -282,6 +317,15 @@ public class SuperLog implements SuperLogConstants {
         public void setAddLogs(boolean addLogs) {
             this.addLogs = addLogs;
         }
+
+        public String getLogCat() {
+            String string = "";
+            if (logCatThread != null && !logCatThread.isInterrupted()) {
+                string = logCatThread.getLogCatString();
+            }
+            return string;
+        }
+
 
         /**
          * @return true: Should show view; false: Should not show view

@@ -24,9 +24,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
 
         SuperLog.init(new SuperLog.Builder(getApplication())
-                .setSuperLogViewVisibility(true));
+                .setSuperLogViewVisibility(true)
+        .startLogCat());
 
 
         setContentView(R.layout.activity_main);
@@ -83,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
 
         timer.scheduleAtFixedRate(task, 0, 500);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
     }
 
     @Override

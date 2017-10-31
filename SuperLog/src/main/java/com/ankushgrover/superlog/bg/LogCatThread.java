@@ -1,5 +1,7 @@
 package com.ankushgrover.superlog.bg;
 
+import com.ankushgrover.superlog.utils.Utils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -8,6 +10,12 @@ import java.io.InputStreamReader;
  */
 
 public class LogCatThread extends Thread {
+
+    private StringBuilder logBuilder;
+
+    public LogCatThread() {
+        logBuilder = new StringBuilder();
+    }
 
 
     @Override
@@ -23,9 +31,12 @@ public class LogCatThread extends Thread {
             while (!isInterrupted()) {
                 while ((line = bufferedReader.readLine()) != null) {
 
-                    String[] parts = line.split(" ", 6);
+                    logBuilder.append(line);
 
-                        /*if (parts.length > 5 && parts[4].length() == 1 && parts[4].matches("[EWVID]")) {
+
+                    /*String[] parts = line.split(" ", 6);
+
+                        if (parts.length > 5 && parts[4].length() == 1 && parts[4].matches("[EWVID]")) {
 
                             //// TODO: 22/9/17 Enter logtype and log in db.
 
@@ -40,6 +51,14 @@ public class LogCatThread extends Thread {
             }
         } catch (Exception e) {
         }
+    }
+
+    public String getLogCatString() {
+        String log = logBuilder.toString();
+        if (Utils.isEmpty(log))
+            log = "NO LOGS FOUND";
+
+        return log;
     }
 }
 
