@@ -23,7 +23,9 @@ public class LogCatThread extends Thread {
         super.run();
 
         try {
-            Process process = Runtime.getRuntime().exec("logcat");
+
+            String commands [] = {"logcat", "-v", "tag"};
+            Process process = Runtime.getRuntime().exec(commands);
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
@@ -34,6 +36,7 @@ public class LogCatThread extends Thread {
                     if (!line.contains(processId))
                         continue;
 
+
                     logBuilder.append(line);
 
                 }
@@ -41,6 +44,17 @@ public class LogCatThread extends Thread {
             }
         } catch (Exception e) {
         }
+    }
+
+    private void processLog(String log){
+        //D/Something( 7754): 7754asdadasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdsdfasdfasdfasdfargaergaerfvasHELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD
+
+        StringBuilder builder = new StringBuilder(log);
+        builder.replace(1,2, "");
+
+        String arr[] = log.split("/", 2);
+        String type = arr[0];
+        log = arr[1];
     }
 
 }

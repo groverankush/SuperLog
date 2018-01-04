@@ -11,7 +11,6 @@ import com.ankushgrover.superlog.SuperLog;
 
 public class SuperLogModel implements Parcelable {
 
-    private String tag;
     private String message;
     private String timestamp;
     private int type;
@@ -21,21 +20,18 @@ public class SuperLogModel implements Parcelable {
 
     }
 
-    public SuperLogModel(String tag, String message, int type) {
-        this.tag = tag;
+    public SuperLogModel(String message, int type) {
         this.message = message;
         this.type = type;
     }
 
-    public SuperLogModel(String tag, String message, String timestamp, int type) {
-        this.tag = tag;
+    public SuperLogModel(String message, String timestamp, int type) {
         this.message = message;
         this.timestamp = timestamp;
         this.type = type;
     }
 
     protected SuperLogModel(Parcel in) {
-        tag = in.readString();
         message = in.readString();
         timestamp = in.readString();
         type = in.readInt();
@@ -53,9 +49,7 @@ public class SuperLogModel implements Parcelable {
         }
     };
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
+
 
     public void setMessage(String message) {
         this.message = message;
@@ -69,9 +63,6 @@ public class SuperLogModel implements Parcelable {
         this.type = type;
     }
 
-    public String getTag() {
-        return tag;
-    }
 
     public String getMessage() {
         return message;
@@ -92,7 +83,6 @@ public class SuperLogModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(tag);
         parcel.writeString(message);
         parcel.writeString(timestamp);
         parcel.writeInt(type);

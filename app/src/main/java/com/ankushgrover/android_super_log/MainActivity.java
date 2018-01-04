@@ -2,12 +2,11 @@ package com.ankushgrover.android_super_log;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.ankushgrover.superlog.SuperLog;
 
 import java.util.Random;
 import java.util.Timer;
@@ -30,8 +29,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setSuperLogViewVisibility(true)
         .startLogCat());*/
 
+        LogCatThread thread = new LogCatThread();
+        thread.start();
+
+
+
 
         setContentView(R.layout.activity_main);
+
+        findViewById(R.id.temp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Something", android.os.Process.myPid() + "asdadasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdsdfasdfasdfasdfargaergaerfvasHELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD ");
+                Log.v("Verbose", android.os.Process.myPid() + "");
+                Log.e("Error", android.os.Process.myPid() + "");
+            }
+        });
 
 
         button = (Button) findViewById(R.id.start);
@@ -55,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int type = random.nextInt(6);
 
-                switch (type) {
+                /*switch (type) {
                     case SuperLog.DEBUG:
                         SuperLog.d(tag, message);
                         break;
@@ -80,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         SuperLog.log(message);
                         break;
 
-                }
+                }*/
             }
         };
 
@@ -111,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        switch (v.getId()) {
+        /*switch (v.getId()) {
             case R.id.debug:
                 SuperLog.d(tag, message);
                 break;
@@ -150,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SuperLog.log(message);
                 break;
 
-        }
+        }*/
 
     }
 }

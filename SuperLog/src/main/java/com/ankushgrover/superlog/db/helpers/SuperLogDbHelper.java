@@ -46,7 +46,6 @@ public class SuperLogDbHelper implements SuperLogConstants {
     private synchronized void insert(SuperLogModel log) {
         log.setTimestamp(TimeUtils.getTimeStamp());
         ContentValues values = new ContentValues();
-        values.put(SuperLogTable.TAG, log.getTag());
         values.put(SuperLogTable.MESSAGE, log.getMessage());
         values.put(SuperLogTable.TYPE, log.getType());
         values.put(SuperLogTable.TIMESTAMP, log.getTimestamp());
@@ -64,7 +63,6 @@ public class SuperLogDbHelper implements SuperLogConstants {
         while (cursor.moveToNext()) {
             SuperLogModel log = new SuperLogModel();
             log.setTimestamp(cursor.getString(cursor.getColumnIndex(SuperLogTable.TIMESTAMP)));
-            log.setTag(cursor.getString(cursor.getColumnIndex(SuperLogTable.TAG)));
             log.setMessage(cursor.getString(cursor.getColumnIndex(SuperLogTable.MESSAGE)));
             log.setType(cursor.getInt(cursor.getColumnIndex(SuperLogTable.TYPE)));
             logs.add(log);
@@ -84,32 +82,31 @@ public class SuperLogDbHelper implements SuperLogConstants {
     private synchronized String getLogsString(boolean forMail) {
 
 
-        String logs = "";
+        StringBuilder logs = new StringBuilder();
 
         Cursor cursor = DbHelper.getInstance().getReadableDatabase().query(SuperLogTable.TABLE_NAME, null, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
             SuperLogModel log = new SuperLogModel();
             log.setTimestamp(cursor.getString(cursor.getColumnIndex(SuperLogTable.TIMESTAMP)));
-            log.setTag(cursor.getString(cursor.getColumnIndex(SuperLogTable.TAG)));
             log.setMessage(cursor.getString(cursor.getColumnIndex(SuperLogTable.MESSAGE)));
             log.setType(cursor.getInt(cursor.getColumnIndex(SuperLogTable.TYPE)));
 
-            logs += Utils.getLogStringForMail(log.getTag(), log.getMessage(), log.getTimestamp(), log.getType());
+            logs.append(Utils.getLogStringForMail(log.getMessage(), log.getTimestamp()));
         }
 
         cursor.close();
 
         if (forMail) {
-            if (!Utils.isEmpty(logs)) {
+            if (!Utils.isEmpty(logs.toString())) {
                 String deviceInfo = "Device: " + Build.BRAND + " " + Build.MODEL + "\n" + "OS Version: " + Build.VERSION.RELEASE + "\n\n";
-                logs = deviceInfo + logs;
+                logs.insert(0, deviceInfo);
             }
             DbHelper.getInstance().clear();
         }
 
 
-        return logs;
+        return logs.toString();
     }
 
     /**

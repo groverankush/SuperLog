@@ -82,15 +82,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Start" />
+
+            <Button
+                android:id="@+id/temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="temp" />
         </LinearLayout>
 
     </ScrollView>
 
 
-    <com.ankushgrover.superlog.views.SuperLogView
+<!--    <com.ankushgrover.superlog.views.SuperLogView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textStyle="bold" />
+        android:textStyle="bold" />-->
 
 </FrameLayout>
