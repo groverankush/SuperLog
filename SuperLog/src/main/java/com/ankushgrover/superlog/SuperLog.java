@@ -300,6 +300,7 @@ public class SuperLog implements SuperLogConstants {
             this.logCatThread = new LogCatThread();
             logCatThread.run();
             return this;
+
         }
 
         public Builder stopLogCat() {
@@ -319,11 +320,12 @@ public class SuperLog implements SuperLogConstants {
         }
 
         public String getLogCat() {
-            String string = "";
+            return "";
+/*            String string = "";
             if (logCatThread != null && !logCatThread.isInterrupted()) {
                 string = logCatThread.getLogCatString();
             }
-            return string;
+            return string;*/
         }
 
 

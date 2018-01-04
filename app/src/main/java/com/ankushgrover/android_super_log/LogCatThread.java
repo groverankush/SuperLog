@@ -1,4 +1,4 @@
-package com.ankushgrover.superlog.bg;
+package com.ankushgrover.android_super_log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

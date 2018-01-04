@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         
 
-        SuperLog.init(new SuperLog.Builder(getApplication())
+        /*SuperLog.init(new SuperLog.Builder(getApplication())
                 .setSuperLogViewVisibility(true)
-        .startLogCat());
+        .startLogCat());*/
 
 
         setContentView(R.layout.activity_main);
