@@ -44,16 +44,21 @@ public class LogCatThread extends Thread {
 
     private int getType(String log) {
 
-        int DEBUG = 0;
-        int ERROR = 1;
-        int WARNING = 2;
-        int VERBOSE = 3;
-        int NORMAL = 4;
-        int INFO = 5;
-
         switch (log.charAt(0)) {
             case 'D':
                 return SuperLogConstants.DEBUG;
+
+            case 'E':
+                return SuperLogConstants.ERROR;
+
+            case 'W':
+                return SuperLogConstants.WARNING;
+
+            case 'V':
+                return SuperLogConstants.VERBOSE;
+
+            case 'I':
+                return SuperLogConstants.INFO;
         }
 
         return SuperLogConstants.DEBUG;
