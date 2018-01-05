@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ankushgrover.superlog.SuperLog;
+import com.ankushgrover.superlog.bg.LogCatThread;
+
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,16 +26,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
 
-        /*SuperLog.init(new SuperLog.Builder(getApplication())
+
+        SuperLog.init(new SuperLog.Builder()
                 .setSuperLogViewVisibility(true)
-        .startLogCat());*/
+                .startLogCat());
 
         LogCatThread thread = new LogCatThread();
         thread.start();
-
-
 
 
         setContentView(R.layout.activity_main);

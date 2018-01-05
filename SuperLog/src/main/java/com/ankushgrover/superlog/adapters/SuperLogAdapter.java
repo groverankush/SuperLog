@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ankushgrover.superlog.R;
-import com.ankushgrover.superlog.activity.SuperLogActivity;
+import com.ankushgrover.superlog.mvp.SuperLogActivity;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.Utils;
@@ -44,7 +44,7 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
     public void onBindViewHolder(Holder holder, int position) {
 
         SuperLogModel log = filtered.get(position);
-        holder.log.setText(Utils.getLogString(log.getTag(), log.getMessage(), log.getTimestamp()));
+        holder.log.setText(Utils.getLogString(log.getMessage(), log.getTimestamp()));
         holder.log.setTextColor(ContextCompat.getColor(context, Utils.getLogType(log.getType()).getColor()));
 
 
@@ -67,8 +67,7 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
             filtered.addAll(list);
         } else {
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getMessage().toLowerCase().startsWith(text.toLowerCase())
-                        || list.get(i).getTag().startsWith(text))
+                if (list.get(i).getMessage().toLowerCase().contains(text.toLowerCase()))
                     filtered.add(list.get(i));
             }
         }
@@ -79,8 +78,7 @@ public class SuperLogAdapter extends RecyclerView.Adapter<SuperLogAdapter.Holder
 
 
     public int checkAndAddLog(SuperLogModel log, String query) {
-        if (Utils.isEmpty(query) || log.getMessage().toLowerCase().contains(query)
-                || log.getTag().toLowerCase().contains(query)) {
+        if (Utils.isEmpty(query) || log.getMessage().toLowerCase().contains(query)) {
             filtered.add(log);
             notifyDataSetChanged();
             return filtered.size();

@@ -1,27 +1,29 @@
-package com.ankushgrover.superlog.activity;
+package com.ankushgrover.superlog.mvp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import com.ankushgrover.superlog.ContextWrapper;
 import com.ankushgrover.superlog.R;
 import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.adapters.SuperLogAdapter;
@@ -33,9 +35,10 @@ import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
-public class SuperLogActivity extends AppCompatActivity implements DataLoadListener<Object>, SuperLogConstants, View.OnClickListener, SearchView.OnQueryTextListener {
+import static com.ankushgrover.superlog.db.helpers.SuperLogDbHelper.GET_ALL_LOGS_FOR_MAIL;
+
+public class SuperLogActivity extends AppCompatActivity implements DataLoadListener<Object>, SuperLogConstants, View.OnClickListener, SearchView.OnQueryTextListener, ContextWrapper {
 
     private ArrayList<SuperLogModel> logs;
     private RecyclerView recycler;
@@ -70,7 +73,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         progressBar = (ProgressBar) findViewById(R.id.progress);
         findViewById(R.id.fab).setOnClickListener(this);
         moveFab.setOnClickListener(this);
-        SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS, null, this);
+        SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS, null, this, this);
     }
 
     private void initRecycler() {
@@ -153,7 +156,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         } else if (id == R.id.action_search) {
 
         } else if (id == R.id.action_delete) {
-            DbHelper.getInstance().clear();
+            DbHelper.getInstance(this).clear();
             adapter.removeAllLogs();
         }
 
@@ -171,6 +174,32 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
                     displayEmptyText(true);
                 initRecycler();
                 break;
+
+            case SuperLogDbHelper.GET_ALL_LOGS_FOR_MAIL:
+                String logs = (String) obj;
+                if (Utils.isEmpty(logs))
+                    Log.v("SuperLog Db Empty", "Tried sending mail, but the db is empty.");
+
+                else {
+                    try {
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, SuperLog.class.getSimpleName());
+                        intent.setData(Uri.parse("mailto:"));
+                        intent.putExtra(Intent.EXTRA_TEXT, logs);
+                        //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
+
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("Error Sending mail", e.getMessage());
+                    }
+
+                }
+                break;
         }
     }
 
@@ -185,7 +214,7 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         int id = v.getId();
 
         if (id == R.id.fab) {
-            SuperLog.sendMail();
+            sendMail(this);
 
         } else if (id == R.id.move) {
             recycler.smoothScrollToPosition(logs.size() - 1);
@@ -204,6 +233,20 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
         findViewById(R.id.empty).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+
+    public void sendMail(final ContextWrapper wrapper) {
+
+
+        SuperLogDbHelper.getInstance().perform(GET_ALL_LOGS_FOR_MAIL, null, new DataLoadListener<Object>() {
+            @Override
+            public void onDataLoaded(Object obj, int key) {
+
+
+            }
+        }, this);
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -262,5 +305,10 @@ public class SuperLogActivity extends AppCompatActivity implements DataLoadListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

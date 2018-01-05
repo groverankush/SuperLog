@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 
@@ -33,8 +34,8 @@ public class Utils implements SuperLogConstants {
         return TextUtils.isEmpty(string) || TextUtils.isEmpty(string.trim()) || "null".contentEquals(string.trim());
     }
 
-    public static String getLogString(@NonNull String tag, @NonNull String message, @NonNull String timeStamp) {
-        return String.format("%s %s: %s", timeStamp, tag, message);
+    public static String getLogString(@NonNull String message, @NonNull String timeStamp) {
+        return String.format("%s %s", timeStamp, message);
     }
 
     public static String getLogStringForMail(@NonNull String message, @NonNull String timeStamp) {
@@ -85,7 +86,7 @@ public class Utils implements SuperLogConstants {
 
         } catch (Exception e) {
             e.printStackTrace();
-            SuperLog.e("Error Fetching properties", "FAILED");
+            Log.e("Fetching properties", "FAILED");
         }
 
         return new String[]{"hello", "world"};

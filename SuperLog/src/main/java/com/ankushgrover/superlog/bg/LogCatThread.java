@@ -1,5 +1,7 @@
 package com.ankushgrover.superlog.bg;
 
+import com.ankushgrover.superlog.constants.SuperLogConstants;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -10,11 +12,10 @@ import java.io.InputStreamReader;
 public class LogCatThread extends Thread {
 
     private static final String processId = Integer.toString(android.os.Process.myPid());
-    private final StringBuilder logBuilder;
 
 
     public LogCatThread() {
-        logBuilder = new StringBuilder("");
+
     }
 
 
@@ -23,24 +24,40 @@ public class LogCatThread extends Thread {
         super.run();
 
         try {
-            Process process = Runtime.getRuntime().exec("logcat");
+
+            String commands[] = {"logcat", "-v", "tag"};
+            Process process = Runtime.getRuntime().exec(commands);
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
 
 
             while (!isInterrupted()) {
                 String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (!line.contains(processId))
-                        continue;
-
-                    logBuilder.append(line);
+                while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
 
                 }
                 System.gc();
             }
         } catch (Exception e) {
         }
+    }
+
+    private int getType(String log) {
+
+        int DEBUG = 0;
+        int ERROR = 1;
+        int WARNING = 2;
+        int VERBOSE = 3;
+        int NORMAL = 4;
+        int INFO = 5;
+
+        switch (log.charAt(0)) {
+            case 'D':
+                return SuperLogConstants.DEBUG;
+        }
+
+        return SuperLogConstants.DEBUG;
+
     }
 
 }

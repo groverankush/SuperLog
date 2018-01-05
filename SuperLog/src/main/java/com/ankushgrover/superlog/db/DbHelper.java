@@ -1,5 +1,6 @@
 package com.ankushgrover.superlog.db;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -16,13 +17,13 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
     private static DbHelper mInstance;
 
-    private DbHelper() {
-        super(SuperLog.getBuilder().getContext(), NAME, null, DB_VERSION);
+    private DbHelper(Context context) {
+        super(context, NAME, null, DB_VERSION);
     }
 
-    public static synchronized DbHelper getInstance() {
+    public static synchronized DbHelper getInstance(Context context) {
         if (mInstance == null)
-            mInstance = new DbHelper();
+            mInstance = new DbHelper(context);
         return mInstance;
     }
 
