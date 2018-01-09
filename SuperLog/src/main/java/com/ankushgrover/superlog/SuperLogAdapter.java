@@ -1,4 +1,4 @@
-package com.ankushgrover.superlog.adapters;
+package com.ankushgrover.superlog;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -8,10 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ankushgrover.superlog.R;
-import com.ankushgrover.superlog.SuperLogActivity;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
-import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;

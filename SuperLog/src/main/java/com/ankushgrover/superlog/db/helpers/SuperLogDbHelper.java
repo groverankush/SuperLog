@@ -14,7 +14,7 @@ import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.DbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
 import com.ankushgrover.superlog.db.table.SuperLogTable;
-import com.ankushgrover.superlog.model.SuperLogModel;
+import com.ankushgrover.superlog.SuperLogModel;
 import com.ankushgrover.superlog.utils.TimeUtils;
 import com.ankushgrover.superlog.utils.Utils;
 

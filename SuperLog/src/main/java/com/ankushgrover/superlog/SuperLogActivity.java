@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,19 +15,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.ankushgrover.superlog.adapters.SuperLogAdapter;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.DbHelper;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
-import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.Utils;
 
 import java.util.ArrayList;

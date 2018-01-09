@@ -1,9 +1,7 @@
-package com.ankushgrover.superlog.model;
+package com.ankushgrover.superlog;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.ankushgrover.superlog.SuperLog;
 
 /**
  * Created by Ankush Grover(ankush.dev2@gmail.com) on 28/8/17.

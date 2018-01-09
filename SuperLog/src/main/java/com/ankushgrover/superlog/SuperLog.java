@@ -9,7 +9,6 @@ import android.util.Log;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
-import com.ankushgrover.superlog.model.SuperLogModel;
 import com.ankushgrover.superlog.utils.Utils;
 
 /**
