@@ -1,6 +1,10 @@
 package com.ankushgrover.android_super_log;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.ankushgrover.superlog.ContextWrapper;
+import com.ankushgrover.superlog.SuperLog;
 
 
 /**
@@ -13,6 +17,15 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        SuperLog.init(new SuperLog.Builder()
+                .setSuperLogViewVisibility(true), new ContextWrapper() {
+            @Override
+            public Context getContext() {
+                return getApplicationContext();
+            }
+        });
 
     }
+
+
 }

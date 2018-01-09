@@ -44,7 +44,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
      *
      * @param log : log data in form of model.
      */
-    private synchronized void insert(Context context, SuperLogModel log) {
+    private static synchronized void insert(Context context, SuperLogModel log) {
         log.setTimestamp(TimeUtils.getTimeStamp());
         ContentValues values = new ContentValues();
         values.put(SuperLogTable.MESSAGE, log.getMessage());
@@ -56,7 +56,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
     }
 
 
-    private synchronized ArrayList<SuperLogModel> getLogs(Context context) {
+    private static synchronized ArrayList<SuperLogModel> getLogs(Context context) {
         ArrayList<SuperLogModel> logs = new ArrayList<>();
 
         Cursor cursor = DbHelper.getInstance(context).getReadableDatabase().query(SuperLogTable.TABLE_NAME, null, null, null, null, null, null);
@@ -72,7 +72,6 @@ public class SuperLogDbHelper implements SuperLogConstants {
         cursor.close();
 
         return logs;
-
     }
 
     /**
@@ -80,7 +79,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
      *
      * @return
      */
-    private synchronized String getLogsString(Context context, boolean forMail) {
+    private static synchronized String getLogsString(Context context, boolean forMail) {
 
 
         StringBuilder logs = new StringBuilder();
@@ -116,7 +115,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
      * @param action: Action to perform. It's a string constant defined in {@link SuperLogConstants}
      * @param log:    log data in form of {@link SuperLogModel}
      */
-    private void sendBroadcast(Context context, String action, SuperLogModel log) {
+    private static void sendBroadcast(Context context, String action, SuperLogModel log) {
         Intent intent = new Intent(action);
         intent.putExtra(LOG, log);
 
@@ -129,7 +128,7 @@ public class SuperLogDbHelper implements SuperLogConstants {
     }
 
 
-    private class LogAsyncTask extends AsyncTask<Void, Void, Object> {
+    private static class LogAsyncTask extends AsyncTask<Void, Void, Object> {
 
         private final int taskId;
         private final Bundle bundle;

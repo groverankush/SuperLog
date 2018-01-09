@@ -1,9 +1,11 @@
 package com.ankushgrover.superlog;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.ankushgrover.superlog.bg.LogCatThread;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 import com.ankushgrover.superlog.db.helpers.SuperLogDbHelper;
 import com.ankushgrover.superlog.db.listener.DataLoadListener;
@@ -19,7 +21,7 @@ public class SuperLog implements SuperLogConstants {
     private static Builder BUILDER;
 
 
-    public static void log(int type, String msg, ContextWrapper wrapper) {
+    static void log(int type, String msg, ContextWrapper wrapper) {
 
         if (!(!BUILDER.isAddLogs() || Utils.isEmpty(msg))) {
             Bundle bundle = new Bundle();
@@ -34,14 +36,53 @@ public class SuperLog implements SuperLogConstants {
         }
     }
 
+    static void sendMail(final ContextWrapper wrapper) {
+
+
+        SuperLogDbHelper.getInstance().perform(SuperLogDbHelper.GET_ALL_LOGS_FOR_MAIL, null, new DataLoadListener<Object>() {
+            @Override
+            public void onDataLoaded(Object obj, int key) {
+                final String logs = (String) obj;
+                if (Utils.isEmpty(logs))
+                    Log.v("SuperLog Db Empty", "Tried sending mail, but the db is empty.");
+
+                else {
+
+                    try {
+
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, SuperLog.class.getSimpleName());
+                        intent.setData(Uri.parse("mailto:"));
+                        intent.putExtra(Intent.EXTRA_TEXT, logs);
+                        //intent.putExtra(Intent.EXTRA_EMAIL, new String[]{recipientEmail});
+
+                        if (intent.resolveActivity(wrapper.getContext().getPackageManager()) != null) {
+                            wrapper.getContext().startActivity(intent);
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("Error Sending mail", e.getMessage());
+                    }
+
+                }
+
+            }
+        }, wrapper);
+
+
+    }
 
     /**
      * Method to initialize SuperLog
      *
      * @param builder
      */
-    public static void init(@NonNull Builder builder) {
+    public static void init(@NonNull Builder builder, ContextWrapper wrapper) {
         BUILDER = builder;
+
+        builder.startLogCat(wrapper);
+
     }
 
     public static Builder getBuilder() {
@@ -54,7 +95,6 @@ public class SuperLog implements SuperLogConstants {
 
         private boolean superLogViewVisibility;
         private boolean addLogs;
-        private String email, pass;
         private LogCatThread logCatThread;
 
         public Builder() {
@@ -77,20 +117,19 @@ public class SuperLog implements SuperLogConstants {
             return this;
         }
 
-        public Builder startLogCat() {
-            this.logCatThread = new LogCatThread();
-            logCatThread.run();
-            return this;
+        private void startLogCat(ContextWrapper wrapper) {
+            this.logCatThread = new LogCatThread(wrapper);
+            logCatThread.start();
 
         }
 
-        public Builder stopLogCat() {
+        /*public Builder stopLogCat() {
             if (this.logCatThread != null) {
                 this.logCatThread.interrupt();
                 this.logCatThread = null;
             }
             return this;
-        }
+        }*/
 
         public boolean isAddLogs() {
             return addLogs;
@@ -107,21 +146,6 @@ public class SuperLog implements SuperLogConstants {
             return superLogViewVisibility;
         }
 
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
-        public String getPass() {
-            return pass;
-        }
-
-        public void setPass(String pass) {
-            this.pass = pass;
-        }
 
     }
 

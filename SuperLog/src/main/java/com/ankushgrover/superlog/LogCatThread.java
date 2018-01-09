@@ -1,5 +1,7 @@
-package com.ankushgrover.superlog.bg;
+package com.ankushgrover.superlog;
 
+import com.ankushgrover.superlog.ContextWrapper;
+import com.ankushgrover.superlog.SuperLog;
 import com.ankushgrover.superlog.constants.SuperLogConstants;
 
 import java.io.BufferedReader;
@@ -12,10 +14,11 @@ import java.io.InputStreamReader;
 public class LogCatThread extends Thread {
 
     private static final String processId = Integer.toString(android.os.Process.myPid());
+    private final ContextWrapper wrapper;
 
 
-    public LogCatThread() {
-
+    public LogCatThread(ContextWrapper wrapper) {
+        this.wrapper = wrapper;
     }
 
 
@@ -34,11 +37,12 @@ public class LogCatThread extends Thread {
             while (!isInterrupted()) {
                 String line;
                 while ((line = bufferedReader.readLine()) != null && !line.isEmpty()) {
-
+                    SuperLog.log(getType(line), line, wrapper);
                 }
                 System.gc();
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

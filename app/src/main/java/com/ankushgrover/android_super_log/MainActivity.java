@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ankushgrover.superlog.SuperLog;
-import com.ankushgrover.superlog.bg.LogCatThread;
 
 import java.util.Random;
 import java.util.Timer;
@@ -27,28 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        SuperLog.init(new SuperLog.Builder()
-                .setSuperLogViewVisibility(true)
-                .startLogCat());
-
-        LogCatThread thread = new LogCatThread();
-        thread.start();
-
-
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.temp).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Something", android.os.Process.myPid() + "asdadasdasdasdasdasdasdasdasdasdsadasdasdasdasdasdasdasdasdasdasdsdfasdfasdfasdfargaergaerfvasHELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD HELLO WORLD ");
-                Log.v("Verbose", android.os.Process.myPid() + "");
-                Log.e("Error", android.os.Process.myPid() + "");
-            }
-        });
-
-
-        button = (Button) findViewById(R.id.start);
+        button = findViewById(R.id.start);
 
         findViewById(R.id.debug).setOnClickListener(this);
         findViewById(R.id.error).setOnClickListener(this);
@@ -69,32 +49,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 int type = random.nextInt(6);
 
-                /*switch (type) {
+                switch (type) {
                     case SuperLog.DEBUG:
-                        SuperLog.d(tag, message);
+                        Log.d(tag, message);
                         break;
 
                     case SuperLog.WARNING:
-                        SuperLog.w(tag, message);
+                        Log.w(tag, message);
                         break;
 
                     case SuperLog.ERROR:
-                        SuperLog.e(tag, message);
+                        Log.e(tag, message);
                         break;
 
                     case SuperLog.VERBOSE:
-                        SuperLog.v(tag, message);
+                        Log.v(tag, message);
                         break;
 
                     case SuperLog.INFO:
-                        SuperLog.i(tag, message);
+                        Log.i(tag, message);
                         break;
 
                     case SuperLog.NORMAL:
-                        SuperLog.log(message);
+                        Log.d(MainActivity.class.getSimpleName(), message);
                         break;
 
-                }*/
+                }
             }
         };
 
@@ -125,25 +105,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        /*switch (v.getId()) {
+        switch (v.getId()) {
             case R.id.debug:
-                SuperLog.d(tag, message);
+                Log.d(tag, message);
                 break;
 
             case R.id.error:
-                SuperLog.e(tag, message);
+                Log.e(tag, message);
                 break;
 
             case R.id.warn:
-                SuperLog.w(tag, message);
+                Log.w(tag, message);
                 break;
 
             case R.id.verbose:
-                SuperLog.v(tag, message);
+                Log.v(tag, message);
                 break;
 
             case R.id.info:
-                SuperLog.i(tag, message);
+                Log.i(tag, message);
                 break;
 
             case R.id.start:
@@ -161,10 +141,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             default:
-                SuperLog.log(message);
+                Log.d("Main Activity", message);
                 break;
 
-        }*/
+        }
 
     }
 }

@@ -7,7 +7,7 @@
 
     <application>
         <activity
-            android:name=".mvp.SuperLogActivity"
+            android:name=".SuperLogActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ag_sl_SuperLogTheme" />
     </application>

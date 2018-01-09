@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.ankushgrover.superlog.R;
 import com.ankushgrover.superlog.SuperLog;
-import com.ankushgrover.superlog.mvp.SuperLogActivity;
+import com.ankushgrover.superlog.SuperLogActivity;
 
 
 /**
